@@ -1,4 +1,3 @@
-cat > ozx_scanner.py << 'EOF'
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
@@ -24,7 +23,6 @@ PRICE_RANGES = {
     "High": (244, 520)
 }
 
-# Built-in list for automatic scan
 DEFAULT_TICKERS = ["AMD","NVDA","TSLA","AAPL","GOOGL","MSFT","AMZN","META","NFLX","AVGO","ADBE","CRM","INTC","QCOM","TXN","MU","AMAT","KLAC","LRCX","ASML","PLTR","CRWD","PANW","ZS","NET","DDOG","MDB","HUBS","NOW","TEAM","WDAY","SHOP","SQ","PYPL","COIN","HOOD","RBLX","U","PATH","SNAP","PINS","SPOT","RIVN","LCID","NIO","XPEV","LI","ARM","SMCI","DELL","WDC","STX","NTAP","PSTG","ENVX","UPST","ASTS","SERV","ALGM","CCJ","FCX","VALE","X","CLF","NUE","STLD","MT","RS","CMC","ATI","HRI","URI","PWR","ETR","CEG","VST","NRG","AES","GEV","FLR","J","ACHR","JOBY","KTOS","RKLB","SPCE","LUNR","SMR","OKLO","BWXT","LEU","UEC","URG","DNN","UUUU","PLUG","BE","RUN","ENPH","SEDG","FSLR","NOVA","MAXN","SHLS","ARRY","CSIQ","JKS","DQ","SPWR"]
 
 def get_historical_data(ticker):
@@ -97,7 +95,7 @@ def analyze_stock(ticker):
     }
 
 if st.button("🚀 Run Automatic Quick Scan ($30–$520 NYSE)", type="primary", use_container_width=True):
-    with st.spinner("Scanning all NYSE stocks in your range..."):
+    with st.spinner("Scanning..."):
         results = []
         def process(t):
             return analyze_stock(t)
@@ -107,20 +105,6 @@ if st.button("🚀 Run Automatic Quick Scan ($30–$520 NYSE)", type="primary", 
                     results.append(res)
         st.session_state.full_results = pd.DataFrame(results)
         st.success(f"✅ Scan complete! {len(results)} stocks ranked.")
-
-uploaded_file = st.file_uploader("Or upload Finviz CSV for bigger scan", type="csv")
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    tickers = df['Ticker'].tolist()
-    with st.spinner("Running full scan..."):
-        results = []
-        def process(t):
-            return analyze_stock(t)
-        with ThreadPoolExecutor(max_workers=8) as executor:
-            for res in executor.map(process, tickers):
-                if res:
-                    results.append(res)
-        st.session_state.full_results = pd.DataFrame(results)
 
 tab1, tab2, tab3 = st.tabs(["Low: $30–$136", "Mid: $137–$243", "High: $244–$520"])
 
