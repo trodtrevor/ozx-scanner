@@ -123,4 +123,3 @@ for tab, (name, (low, high)) in zip([tab1, tab2, tab3], PRICE_RANGES.items()):
                 st.download_button(f"Download {name} CSV", subset.to_csv(index=False), f"ozx_{name.lower()}_scan.csv", "text/csv")
 
 st.caption("Scans $30–$520 NYSE stocks using your exact Pier OZX volume-price imbalance metric.")
-EOF
